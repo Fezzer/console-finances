@@ -9,7 +9,7 @@ class State {
     this.monthCount++;
     this.netTotal += profit;
 
-    if (this.previousMonthProfit !== undefined) {
+    if (this.monthCount > 1) {
       let profitDelta = profit - this.previousMonthProfit;
       this.deltaTotal += profitDelta;
   
