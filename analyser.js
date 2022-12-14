@@ -1,37 +1,44 @@
-let totalMonths = finances.length;
-let netTotal = 0;
-let deltaTotal = 0;
-let previousMonthProfit;
-let maxProfitDelta;
-let minProfitDelta;
+class State {
+  netTotal = 0;
+  deltaTotal = 0;
+  monthCount = 0;
+  maxProfitDelta;
+  minProfitDelta;
 
-finances.forEach(month => {
-  let date = month[0]
-  let profit = month[1];
+  processMonth(date, profit) {
+    this.monthCount++;
+    this.netTotal += profit;
 
-  netTotal += profit;
-
-  if (previousMonthProfit !== undefined) {
-    let profitDelta = profit - previousMonthProfit;
-    deltaTotal += profitDelta;
-
-    if (profitDelta > maxProfitDelta?.delta || maxProfitDelta === undefined) {
-      maxProfitDelta = {month: date, delta: profitDelta};
+    if (this.previousMonthProfit !== undefined) {
+      let profitDelta = profit - this.previousMonthProfit;
+      this.deltaTotal += profitDelta;
+  
+      if (profitDelta > this.maxProfitDelta?.delta || this.maxProfitDelta === undefined) {
+        this.maxProfitDelta = {month: date, delta: profitDelta};
+      }
+  
+      if (profitDelta < this.minProfitDelta?.delta || this.minProfitDelta === undefined) {
+        this.minProfitDelta = {month: date, delta: profitDelta};
+      }
     }
+  
+    this.previousMonthProfit = profit;
 
-    if (profitDelta < minProfitDelta?.delta || minProfitDelta === undefined) {
-      minProfitDelta = {month: date, delta: profitDelta};
-    }
+    return this;
   }
 
-  previousMonthProfit = profit;
-});
+  generateOutput() {
+    let output = ["Financial Analysis", "----------------------------"];
+    output.push(`Total Months: ${this.monthCount}`);
+    output.push(`Total: £${this.netTotal}`);
+    output.push(`Average  Change: £${(this.deltaTotal / (this.monthCount - 1)).toFixed(2)}`);
+    output.push(`Greatest Increase in Profits: ${this.maxProfitDelta.month} (£${this.maxProfitDelta.delta})`);
+    output.push(`Greatest Decrease in Profits: ${this.minProfitDelta.month} (£${this.minProfitDelta.delta})`);
 
-let output = ["Financial Analysis", "----------------------------"];
-output.push(`Total Months: ${totalMonths}`);
-output.push(`Total: £${netTotal}`);
-output.push(`Average  Change: £${(deltaTotal / (totalMonths - 1)).toFixed(2)}`);
-output.push(`Greatest Increase in Profits: ${maxProfitDelta.month} (£${maxProfitDelta.delta})`);
-output.push(`Greatest Decrease in Profits: ${minProfitDelta.month} (£${minProfitDelta.delta})`);
+    return output.join("\n");
+  }
+}
 
-console.log(output.join("\n"));
+let output = finances.reduce((a, c) => a.processMonth(c[0], c[1]), new State()).generateOutput();
+console.log(output);
+document.getElementById("output").innerText = output;
