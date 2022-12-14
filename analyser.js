@@ -1,6 +1,7 @@
 let totalMonths = finances.length;
 let netTotal = 0;
 let deltaTotal = 0;
+let previousMonthProfit;
 
 finances.forEach(month => {
   let profit = month[1];
