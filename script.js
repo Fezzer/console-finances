@@ -89,6 +89,17 @@ var finances = [
   ['Feb-2017', 671099]
 ];
 
+Engine.prototype.generateOutput = function () {
+  let output = ["Financial Analysis", "----------------------------"];
+  output.push(`Total Months: ${this.monthCount}`);
+  output.push(`Total: $${this.netTotal}`);
+  output.push(`Average  Change: $${(this.deltaTotal / (this.monthCount - 1)).toFixed(2)}`);
+  output.push(`Greatest Increase in Profits: ${this.maxProfitDelta.month} ($${this.maxProfitDelta.delta})`);
+  output.push(`Greatest Decrease in Profits: ${this.minProfitDelta.month} ($${this.minProfitDelta.delta})`);
+
+  return output.join("\n");
+};
+
 let output = finances.reduce((e, m) => e.processMonth(m[0], m[1]), new Engine()).generateOutput();
 console.log(output);
 document.getElementById("output").innerText = output;
