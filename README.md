@@ -10,7 +10,7 @@ The aim of this project is to take a financial dataset and calculate the followi
 - The greatest decrease in profits (date and amount) over the entire period.[^2]
 
 I have made a number of assumptions with regards to the dataset, they are:
-- Each month appears only one in the dataset.
+- Each month appears only once in the dataset.
 - The month are contiguous.
 - The dataset is ordered ascending by the month/year.
 
